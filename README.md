@@ -1,2 +1,2 @@
-# IFE_SFT
-In Flight Entertainment - Secure File Transfer
+# IFE_FLIGHT_SIM
+In Flight Entertainment - Flight Simulator
