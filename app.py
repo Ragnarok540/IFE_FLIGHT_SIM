@@ -1,12 +1,20 @@
 from flask import Flask, jsonify
-#from simulador import Simulador
+from simulador import Simulador
+from coordenada import Coordenada
 
+origen = Coordenada(4.81267,-75.7395)
+destino = Coordenada(5.0296,-75.4647)
+sim = Simulador(origen, destino)
 app = Flask(__name__)
 
 @app.route('/ping', methods=['GET'])
 def ping():
     status = "200"
-    message = "pong"
+    #origen = Coordenada(4.81267,-75.7395)
+    #destino = Coordenada(5.0296,-75.4647)
+    #sim = Simulador(origen, destino)
+    sim.calcular_ruta()
+    message = sim.ubicacion_actual()
 
     return jsonify(status=status,
                    message=message)
