@@ -1,6 +1,7 @@
 from geographiclib.geodesic import Geodesic
 import math
 import time
+from random import uniform
 from datetime import datetime, timedelta
 from coordenada import Coordenada
 
@@ -10,13 +11,14 @@ class Simulador:
     en línea recta, entre dos coordenadas.
     """
 
-    def __init__(self, origen, destino, velocidad=340.0):
+    def __init__(self, velocidad=340.0):
         self.geod = Geodesic.WGS84
+        self.velocidad = velocidad
+
+    def definir_coordenadas(self, origen, destino):
+        """Define las coordenadas de la simulación actual"""
         self.origen = origen
         self.destino = destino
-        self.velocidad = velocidad
-        self.tiempo_inicio = datetime.fromtimestamp(time.time())
-        self.ruta = {}
 
     def distancia(self):
         """Retorna la distancia en metros
@@ -27,6 +29,7 @@ class Simulador:
                               self.destino.latitud,
                               self.destino.longitud)
         distancia = g['s12']
+        self.distancia = distancia
         return distancia
 
     def tiempo(self):
@@ -36,16 +39,18 @@ class Simulador:
         entre el origen y destino.
         """
         tiempo = self.distancia() / self.velocidad
+        self.tiempo = tiempo
         return tiempo
 
     def tiempo_fin(self):
         """Tiempo de finalización del vuelo."""
         tiempo = self.tiempo()
         tiempo_fin = self.tiempo_inicio + timedelta(seconds=tiempo)
-        return tiempo_fin
+        self.tiempo_fin = tiempo_fin
 
     def calcular_ruta(self):
         """Calcula la ruta del vuelo."""
+        self.ruta = { }
         l = self.geod.InverseLine(self.origen.latitud,
                                   self.origen.longitud,
                                   self.destino.latitud,
@@ -57,13 +62,17 @@ class Simulador:
             g = l.Position(s, Geodesic.STANDARD | Geodesic.LONG_UNROLL)
             self.ruta[i] = [g['lat2'], g['lon2']]
 
-        return self.ruta
-
     def tiempo_transcurrido(self):
-        """Tiempo transcurrido del vuelo."""
+        """Tiempo transcurrido del vuelo en segundos."""
         tiempo_actual = datetime.fromtimestamp(time.time())
         tiempo_transcurrido = tiempo_actual - self.tiempo_inicio
         return tiempo_transcurrido.total_seconds()
+
+    def tiempo_restante(self):
+        """Tiempo restante del vuelo en segundos."""
+        tiempo_actual = datetime.fromtimestamp(time.time())
+        tiempo_restante = self.tiempo_fin - tiempo_actual
+        return tiempo_restante.total_seconds()
 
     def ubicacion_actual(self):
         """Ubicacion actual del avion."""
@@ -72,4 +81,32 @@ class Simulador:
             ubicacion = self.ruta[tiempo]
         except KeyError:
             return [0, 0] # None
-        return self.ruta[tiempo]
+        return ubicacion
+
+    def iniciar_vuelo(self):
+        """Inicia la simulación, llamar luego de
+        definir las coordenadas de origen  destino.
+        """
+        self.tiempo_inicio = datetime.fromtimestamp(time.time())
+        self.calcular_ruta()
+        self.tiempo_fin()
+
+    def temperatura_interior(self):
+        """Temperatura al interior del avión
+        en grados Celsius.
+        """
+        return uniform(23.45, 23.55)
+
+    def temperatura_exterior(self):
+        """Temperatura en el exterior del avión
+        en grados Celsius.
+        """
+        return uniform(-54.15, -54.05)
+
+    def altitud(self):
+        """Altitud del avión en metros."""
+        return uniform(10666, 10670)
+
+    def vel(self):
+        """Velocidad del avión en metros por segundo."""
+        return uniform(self.velocidad - 0.1, self.velocidad + 0.1)
