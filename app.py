@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify, g
+from flask_cors import CORS
 import sqlite3
 from simulador import Simulador
 from coordenada import Coordenada
@@ -9,6 +10,8 @@ DATABASE = './airports.db'
 sim = Simulador()
 
 app = Flask(__name__)
+
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 def get_db():
     db = getattr(g, '_database', None)
@@ -109,7 +112,6 @@ def iniciar_vuelo():
 
 @app.route('/paises', methods=['GET'])
 def paises():
-    status = "200"
     message = []
 
     aero = Aeropuerto("", "", "", "", "", "", "", "", "", "", "")
@@ -118,12 +120,10 @@ def paises():
     for row in q:
         message.append(row['country'])
 
-    return jsonify(status=status,
-                   message=message)
+    return jsonify(message)
 
 @app.route('/aeropuertos/<string:pais>', methods=['GET'])
 def aeropuerto(pais):
-    status = "200"
     message = []
 
     aero = Aeropuerto("", "", "", "", "", "", "", "", "", "", "")
@@ -139,8 +139,7 @@ def aeropuerto(pais):
         dictionary = aero.to_dict()
         message.append(dictionary)
 
-    return jsonify(status=status,
-                   message=message)
+    return jsonify(message)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0")
