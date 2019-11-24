@@ -59,7 +59,7 @@ def tiempo_de_vuelo_actual():
 
 @app.route('/tiempo_de_vuelo_restante', methods=['GET'])
 def tiempo_de_vuelo_restante():
-    status = "500"
+    status = "200"
     message = sim.tiempo_restante()
 
     return jsonify(status=status,
@@ -100,8 +100,8 @@ def velocidad():
 @app.route('/iniciar_vuelo', methods=['POST'])
 def iniciar_vuelo():
     content = request.get_json()
-    origen = Coordenada(content["lat1"], content["lon1"])
-    destino = Coordenada(content["lat2"], content["lon2"])
+    origen = Coordenada(float(content["lat1"]), float(content["lon1"]))
+    destino = Coordenada(float(content["lat2"]), float(content["lon2"]))
     sim.definir_coordenadas(origen, destino)
     sim.iniciar_vuelo()
     status = "200"
