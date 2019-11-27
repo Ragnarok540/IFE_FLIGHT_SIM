@@ -11,14 +11,20 @@ class Simulador:
     en línea recta, entre dos coordenadas.
     """
 
-    def __init__(self, velocidad=340.0):
+    def __init__(self):
         self.geod = Geodesic.WGS84
-        self.velocidad = velocidad
 
     def definir_coordenadas(self, origen, destino):
         """Define las coordenadas de la simulación actual"""
         self.origen = origen
         self.destino = destino
+
+    def definir_velocidad(self, mach):
+        """Define la velocidad de la simulación actual
+        en un múltiplo de la velocidad del sonido.
+        """
+        velocidad = 295.0
+        self.velocidad = velocidad * mach
 
     def calc_distancia(self):
         """Retorna la distancia en metros
@@ -34,7 +40,7 @@ class Simulador:
 
     def calc_tiempo(self):
         """Tiempo de vuelo en segundos, depende de
-        la velocidad (por defecto 340 m/s, es decir
+        la velocidad (por defecto 295 m/s, es decir
         la velocidad del sonido) y la distancia
         entre el origen y destino.
         """

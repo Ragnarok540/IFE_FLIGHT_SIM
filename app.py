@@ -103,6 +103,7 @@ def iniciar_vuelo():
     origen = Coordenada(float(content["lat1"]), float(content["lon1"]))
     destino = Coordenada(float(content["lat2"]), float(content["lon2"]))
     sim.definir_coordenadas(origen, destino)
+    sim.definir_velocidad(content["mach"])
     sim.iniciar_vuelo()
     status = "200"
     message = "OK"
