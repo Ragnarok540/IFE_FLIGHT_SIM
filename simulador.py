@@ -20,7 +20,7 @@ class Simulador:
         self.origen = origen
         self.destino = destino
 
-    def distancia(self):
+    def calc_distancia(self):
         """Retorna la distancia en metros
         entre las coordenadas de origen y destino.
         """
@@ -32,19 +32,19 @@ class Simulador:
         self.distancia = distancia
         return distancia
 
-    def tiempo(self):
+    def calc_tiempo(self):
         """Tiempo de vuelo en segundos, depende de
         la velocidad (por defecto 340 m/s, es decir
         la velocidad del sonido) y la distancia
         entre el origen y destino.
         """
-        tiempo = self.distancia() / self.velocidad
+        tiempo = self.calc_distancia() / self.velocidad
         self.tiempo = tiempo
         return tiempo
 
-    def tiempo_fin(self):
+    def calc_tiempo_fin(self):
         """Tiempo de finalización del vuelo."""
-        tiempo = self.tiempo()
+        tiempo = self.calc_tiempo()
         tiempo_fin = self.tiempo_inicio + timedelta(seconds=tiempo)
         self.tiempo_fin = tiempo_fin
 
@@ -80,7 +80,7 @@ class Simulador:
         try:
             ubicacion = self.ruta[tiempo]
         except KeyError:
-            return [0, 0] # None
+            return [999, 999]
         return ubicacion
 
     def iniciar_vuelo(self):
@@ -89,7 +89,7 @@ class Simulador:
         """
         self.tiempo_inicio = datetime.fromtimestamp(time.time())
         self.calcular_ruta()
-        self.tiempo_fin()
+        self.calc_tiempo_fin()
 
     def temperatura_interior(self):
         """Temperatura al interior del avión
