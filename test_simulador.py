@@ -8,6 +8,7 @@ class SimuladorTestCase(unittest.TestCase):
         self.sim = Simulador()
         self.origen = Coordenada(4.81267, -75.7395)
         self.destino = Coordenada(3.54322, -76.3816)
+        self.maxDiff = None
 
     def test_definir_coordenadas(self):
         self.sim.definir_coordenadas(self.origen, self.destino)
@@ -36,7 +37,7 @@ class SimuladorTestCase(unittest.TestCase):
     def test_calc_distancia(self):
         self.sim.definir_coordenadas(self.origen, self.destino)
 
-        esperado = 157440.23702528953
+        esperado = 157440.23702528956
         observado = self.sim.calc_distancia()
         self.assertEqual(esperado, observado)
 
@@ -44,7 +45,7 @@ class SimuladorTestCase(unittest.TestCase):
         self.sim.definir_coordenadas(self.origen, self.destino)
         self.sim.definir_velocidad(1)
 
-        esperado = 533.695718729795
+        esperado = 533.6957187297951
         observado = self.sim.calc_tiempo()
         self.assertEqual(esperado, observado)
 
@@ -52,13 +53,13 @@ class SimuladorTestCase(unittest.TestCase):
         self.sim.definir_coordenadas(self.origen, self.destino)
         self.sim.definir_velocidad(100)
 
-        esperado = {0: [4.812669999999999, -75.7395],
-                    1: [4.574854328422333, -75.85997423623975],
-                    2: [4.337016818381327, -75.98036900284852],
-                    3: [4.0991586206279464, -76.10068848953729],
+        esperado = {0: [4.81267, -75.7395],
+                    1: [4.574854328422334, -75.85997423623975],
+                    2: [4.337016818381328, -75.98036900284852],
+                    3: [4.099158620627947, -76.10068848953729],
                     4: [3.8612808835291523, -76.22093687700661],
-                    5: [3.6233847532023233, -76.34111833745125],
-                    6: [3.5432199999999994, -76.38160000000003]}
+                    5: [3.6233847532023256, -76.34111833745125],
+                    6: [3.5432200000000003, -76.38160000000003]}
         self.sim.calcular_ruta()
         observado = self.sim.ruta
         self.assertEqual(esperado, observado)
